@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "yV5tUSouxoY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Surface\\Desktop\\oskar programowanie\\FactoryMaintenance\\FactoryMaintenance.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Surface\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.13\\microsoft.aspnetcore.openapi.10.0.13.nupkg.sha512",
+    "C:\\Users\\Surface\\.nuget\\packages\\microsoft.openapi\\2.12.2\\microsoft.openapi.2.12.2.nupkg.sha512"
+  ],
+  "logs": []
+}
