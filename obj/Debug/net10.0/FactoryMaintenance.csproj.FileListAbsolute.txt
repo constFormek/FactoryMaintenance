@@ -31,3 +31,4 @@ C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.
 C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\FactoryMaintenance.pdb
 C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\FactoryMaintenance.genruntimeconfig.cache
 C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\ref\FactoryMaintenance.dll
+C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\FactoryMaintenance.sourcelink.json
