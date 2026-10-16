@@ -4,6 +4,7 @@
 // 3. GET/INIT/SET - get (to read value), set - (change anytime), init (only when object is created then it is locked in)
 // Can't set value without using get because i won't be able to read it.
 using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Source - https://stackoverflow.com/a/76644093
@@ -38,8 +39,16 @@ Machine b = new Machine { ID = 2, Name = "CNC-02", Location = "Hall B", Status =
 
 app.MapGet("/machines", () =>
 {
+    Machine machineForLookup = machines.
     return machines;
 }).WithName("GetMachines");
+
+app.MapGet("/machines/{id}", (int id) =>
+{
+    System.Console.WriteLine(id);
+    // check if exist return machine
+    return machines[0]; // return correct machine or 404
+}).WithName("GetMachineByID");
 
 
 app.Run();
