@@ -34,9 +34,7 @@ app.UseHttpsRedirection();
 Machine a = new Machine { ID = 1, Name = "CNC-01", Location = "Hall A", Status = Status.Running };
 Machine b = new Machine { ID = 2, Name = "CNC-02", Location = "Hall B", Status = Status.Stopped };
 
- List<Machine> machines = [a,b];
-
-
+List<Machine> machines = [a,b];
 
 app.MapGet("/machines", () =>
 {
@@ -56,6 +54,19 @@ app.MapGet("/machines/{id}", Results<Ok<Machine>, NotFound> (int id) =>
     
 }).WithName("GetMachineByID");
 
+app.MapPost("/machines", Results<Created<Machine>, BadRequest<string>>(MachineDTO body) =>
+{
+    // validation
+    if (String.IsNullOrWhiteSpace(body.Name) || String.IsNullOrWhiteSpace(body.Location)) return TypedResults.BadRequest("empty values are not accepted"); 
+    if (body.Status == null) return TypedResults.BadRequest("Status cannot be null");
+    // get new id 
+    int newID = machines.Any() ? machines.Max(m => m.ID) + 1 : 1;
+
+    Machine newMachine = new Machine { ID = newID, Name = body.Name, Location = body.Location, Status = body.Status.Value };
+    machines.Add(newMachine);
+
+    return TypedResults.Created($"/machines/{newID}", newMachine);
+});
 
 app.Run();
 
@@ -67,6 +78,13 @@ enum Status
     Maintenance
 }
 
+
+class MachineDTO
+{
+    public required string Name { get; set;} 
+    public required string Location { get; set; } 
+    public Status? Status { get; set; }
+}
 class Machine
 {
     public int ID { get; init; }  

@@ -1,6 +1,34 @@
 @FactoryMaintenance_HostAddress = http://localhost:5259
 
-GET {{FactoryMaintenance_HostAddress}}/weatherforecast/
+GET {{FactoryMaintenance_HostAddress}}/machines
+Accept: application/json
+
+###
+
+POST {{FactoryMaintenance_HostAddress}}/machines
+Content-Type: application/json
+
+{
+  "name": "CNC-04",
+  "location": "Hall C",
+  "status": "Maintenance"
+}
+
+###
+
+POST {{FactoryMaintenance_HostAddress}}/machines
+Content-Type: application/json
+
+{
+  "name": "Name",
+  "location": "Hall C",
+  "status": "Running"
+}
+
+###
+
+
+GET {{FactoryMaintenance_HostAddress}}/machines/3
 Accept: application/json
 
 ###
