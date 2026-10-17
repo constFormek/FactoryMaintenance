@@ -27,8 +27,17 @@ Content-Type: application/json
 
 ###
 
+PATCH {{FactoryMaintenance_HostAddress}}/machines/2/status
+Content-Type: application/json
 
-GET {{FactoryMaintenance_HostAddress}}/machines/3
+{
+    "status": "Stopped"
+}
+
+###
+
+
+GET {{FactoryMaintenance_HostAddress}}/machines/2
 Accept: application/json
 
 ###

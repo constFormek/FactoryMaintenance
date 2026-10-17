@@ -54,7 +54,7 @@ app.MapGet("/machines/{id}", Results<Ok<Machine>, NotFound> (int id) =>
     
 }).WithName("GetMachineByID");
 
-app.MapPost("/machines", Results<Created<Machine>, BadRequest<string>>(MachineDTO body) =>
+app.MapPost("/machines", Results<Created<Machine>, BadRequest<string>>(CreateMachineDTO body) =>
 {
     // validation
     if (String.IsNullOrWhiteSpace(body.Name) || String.IsNullOrWhiteSpace(body.Location)) return TypedResults.BadRequest("empty values are not accepted"); 
@@ -68,6 +68,21 @@ app.MapPost("/machines", Results<Created<Machine>, BadRequest<string>>(MachineDT
     return TypedResults.Created($"/machines/{newID}", newMachine);
 });
 
+app.MapPatch("/machines/{id}/status", Results<NoContent, NotFound,  BadRequest<string>>(int id, UpdateStatusDTO body) =>
+{   
+    if (body.Status == null) return TypedResults.BadRequest("Status cannot be null");
+
+    Machine? machineForLookup = machines.FirstOrDefault(m => m.ID == id);
+
+    if (machineForLookup == null)
+    {
+        return TypedResults.NotFound();
+    } 
+
+    machineForLookup.Status = body.Status.Value;
+    return TypedResults.NoContent();
+});
+
 app.Run();
 
 
@@ -78,8 +93,13 @@ enum Status
     Maintenance
 }
 
+class UpdateStatusDTO
+{
+    public Status? Status { get; set;}
+}
 
-class MachineDTO
+
+class CreateMachineDTO
 {
     public required string Name { get; set;} 
     public required string Location { get; set; } 
