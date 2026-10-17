@@ -31,3 +31,38 @@ C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.
 C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\FactoryMaintenance.pdb
 C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\FactoryMaintenance.genruntimeconfig.cache
 C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\ref\FactoryMaintenance.dll
+C:\Users\Surface\Desktop\oskar programowanie\FactoryMaintenance\obj\Debug\net10.0\FactoryMaintenance.sourcelink.json
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\appsettings.json
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\FactoryMaintenance.staticwebassets.endpoints.json
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\FactoryMaintenance.exe
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\FactoryMaintenance.deps.json
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\FactoryMaintenance.runtimeconfig.json
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\FactoryMaintenance.dll
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\FactoryMaintenance.pdb
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\plexi\dev\learning\factory-maintenance\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.csproj.AssemblyReference.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.AssemblyInfoInputs.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.AssemblyInfo.cs
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.csproj.CoreCompileInputs.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.sourcelink.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\scopedcss\bundle\FactoryMaintenance.styles.css
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryM.3D2A7FDA.Up2Date
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.dll
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\refint\FactoryMaintenance.dll
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.pdb
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\FactoryMaintenance.genruntimeconfig.cache
+C:\Users\plexi\dev\learning\factory-maintenance\obj\Debug\net10.0\ref\FactoryMaintenance.dll
