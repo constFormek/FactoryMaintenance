@@ -36,8 +36,13 @@ Machine b = new Machine { ID = 2, Name = "CNC-02", Location = "Hall B", Status =
 
 List<Machine> machines = [a,b];
 
-app.MapGet("/machines", () =>
-{
+app.MapGet("/machines", (Status? status) =>
+{   
+    if (status != null)
+    {
+        return machines.Where(m => m.Status == status);
+    }
+
     return machines;
 }).WithName("GetMachines");
 

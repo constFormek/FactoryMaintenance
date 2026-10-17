@@ -36,6 +36,9 @@ Content-Type: application/json
 
 ###
 
+GET {{FactoryMaintenance_HostAddress}}/machines?status=Running
+Accept: application/json
+
 
 GET {{FactoryMaintenance_HostAddress}}/machines/2
 Accept: application/json
