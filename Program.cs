@@ -1,8 +1,4 @@
-// ******* IMPORTANT NOTES ********** //
-// 1. LOGIC ORDER - 1. normal code, 2. type declarations (1. builder, lists, endpoints. 2. enum, class)
-// 2. REQUIRED PROPERTY - works better in my names rather than using string? since it forces proper value
-// 3. GET/INIT/SET - get (to read value), set - (change anytime), init (only when object is created then it is locked in)
-// Can't set value without using get because i won't be able to read it.
+
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -31,20 +27,26 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-Machine a = new Machine { ID = 1, Name = "CNC-01", Location = "Hall A", Status = Status.Running };
-Machine b = new Machine { ID = 2, Name = "CNC-02", Location = "Hall B", Status = Status.Stopped };
+Machine a = new() { ID = 1, Name = "CNC-01", Location = "Hall A", Status = Status.Running };
+Machine b = new() { ID = 2, Name = "CNC-02", Location = "Hall B", Status = Status.Stopped };
 
 List<Machine> machines = [a,b];
 
-app.MapGet("/machines", (Status? status) =>
+app.MapGet("/machines", (Status? status, string? location) =>
 {   
+    IEnumerable<Machine> query = machines;
     if (status != null)
     {
-        return machines.Where(m => m.Status == status);
+        query = query.Where(m => m.Status == status);
     }
 
-    return machines;
-}).WithName("GetMachines");
+    if (!String.IsNullOrWhiteSpace(location))
+    {
+        query = query.Where(m => m.Location.Equals(location, StringComparison.OrdinalIgnoreCase));
+    }
+
+    return query;
+}).WithName("FilterMachines");
 
 app.MapGet("/machines/{id}", Results<Ok<Machine>, NotFound> (int id) =>
 {   
@@ -64,10 +66,11 @@ app.MapPost("/machines", Results<Created<Machine>, BadRequest<string>>(CreateMac
     // validation
     if (String.IsNullOrWhiteSpace(body.Name) || String.IsNullOrWhiteSpace(body.Location)) return TypedResults.BadRequest("empty values are not accepted"); 
     if (body.Status == null) return TypedResults.BadRequest("Status cannot be null");
-    // get new id 
-    int newID = machines.Any() ? machines.Max(m => m.ID) + 1 : 1;
 
-    Machine newMachine = new Machine { ID = newID, Name = body.Name, Location = body.Location, Status = body.Status.Value };
+    // get new id 
+    int newID = machines.Count() > 0 ? machines.Max(m => m.ID) + 1 : 1;
+
+    Machine newMachine = new() { ID = newID, Name = body.Name, Location = body.Location, Status = body.Status.Value };
     machines.Add(newMachine);
 
     return TypedResults.Created($"/machines/{newID}", newMachine);
