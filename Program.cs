@@ -1,16 +1,11 @@
-// ******* IMPORTANT NOTES ********** //
-// 1. LOGIC ORDER - 1. normal code, 2. type declarations (1. builder, lists, endpoints. 2. enum, class)
-// 2. REQUIRED PROPERTY - works better in my names rather than using string? since it forces proper value
-// 3. GET/INIT/SET - get (to read value), set - (change anytime), init (only when object is created then it is locked in)
-// Can't set value without using get because i won't be able to read it.
+
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Source - https://stackoverflow.com/a/76644093
-// Posted by ctyar, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-10-15, License - CC BY-SA 4.0
+private static readonly object _lock = new();
+
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -86,6 +81,12 @@ app.MapPatch("/machines/{id}/status", Results<NoContent, NotFound,  BadRequest<s
 
     machineForLookup.Status = body.Status.Value;
     return TypedResults.NoContent();
+});
+
+app.MapDelete("/machines/{id}", Results<NoContent, NotFound>(int id) =>
+{
+   int deletedCount = machines.RemoveAll(m => m.ID == id);
+   return deletedCount == 0 ? TypedResults.NotFound() : TypedResults.NoContent(); 
 });
 
 app.Run();
