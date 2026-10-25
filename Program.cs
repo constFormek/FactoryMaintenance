@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-private static readonly object _lock = new();
+
 
 
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -30,20 +30,27 @@ Machine a = new Machine { ID = 1, Name = "CNC-01", Location = "Hall A", Status =
 Machine b = new Machine { ID = 2, Name = "CNC-02", Location = "Hall B", Status = Status.Stopped };
 
 List<Machine> machines = [a,b];
+int lastId = 0;
+var machinesLock = new object();
 
-app.MapGet("/machines", (Status? status) =>
+app.MapGet("/machines", Ok<Machine[]>(Status? status) =>
 {   
-    if (status != null)
+    Machine[] results;
+    lock (machinesLock)
     {
-        return machines.Where(m => m.Status == status);
-    }
-
-    return machines;
+        results = status == null ? machines.ToArray() : machines.Where(m => m.Status == status).ToArray();
+    }    
+    
+    return TypedResults.Ok(results); 
 }).WithName("GetMachines");
 
 app.MapGet("/machines/{id}", Results<Ok<Machine>, NotFound> (int id) =>
 {   
-    Machine? machineForLookup = machines.FirstOrDefault(m => m.ID == id);
+    Machine? machineForLookup;
+    lock (machinesLock)
+    {
+        machineForLookup = machines.FirstOrDefault(m => m.ID == id);
+    }
 
     if (machineForLookup == null)
     {
@@ -59,33 +66,45 @@ app.MapPost("/machines", Results<Created<Machine>, BadRequest<string>>(CreateMac
     // validation
     if (String.IsNullOrWhiteSpace(body.Name) || String.IsNullOrWhiteSpace(body.Location)) return TypedResults.BadRequest("empty values are not accepted"); 
     if (body.Status == null) return TypedResults.BadRequest("Status cannot be null");
-    // get new id 
-    int newID = machines.Any() ? machines.Max(m => m.ID) + 1 : 1;
 
-    Machine newMachine = new Machine { ID = newID, Name = body.Name, Location = body.Location, Status = body.Status.Value };
-    machines.Add(newMachine);
+    Machine newMachine;
+    lock (machinesLock)
+    {
+        newMachine = new Machine { ID = ++lastId, Name = body.Name, Location = body.Location, Status = body.Status.Value };
+        machines.Add(newMachine);
+    }
 
-    return TypedResults.Created($"/machines/{newID}", newMachine);
+    return TypedResults.Created($"/machines/{newMachine.ID}", newMachine);
 });
 
 app.MapPatch("/machines/{id}/status", Results<NoContent, NotFound,  BadRequest<string>>(int id, UpdateStatusDTO body) =>
 {   
     if (body.Status == null) return TypedResults.BadRequest("Status cannot be null");
 
-    Machine? machineForLookup = machines.FirstOrDefault(m => m.ID == id);
+    Machine? machineForLookup;
+
+    lock (machinesLock)
+    {
+        machineForLookup = machines.FirstOrDefault(m => m.ID == id);
+        machineForLookup?.Status = body.Status.Value; 
+    }
 
     if (machineForLookup == null)
     {
         return TypedResults.NotFound();
     } 
 
-    machineForLookup.Status = body.Status.Value;
     return TypedResults.NoContent();
 });
 
 app.MapDelete("/machines/{id}", Results<NoContent, NotFound>(int id) =>
 {
-   int deletedCount = machines.RemoveAll(m => m.ID == id);
+    int deletedCount;        
+    lock (machinesLock)
+    {
+        deletedCount = machines.RemoveAll(m => m.ID == id);  
+    }
+
    return deletedCount == 0 ? TypedResults.NotFound() : TypedResults.NoContent(); 
 });
 
