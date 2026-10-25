@@ -91,31 +91,3 @@ app.MapDelete("/machines/{id}", Results<NoContent, NotFound>(int id) =>
 
 app.Run();
 
-
-enum Status
-{
-    Running,
-    Stopped,
-    Maintenance
-}
-
-class UpdateStatusDTO
-{
-    public Status? Status { get; set;}
-}
-
-
-class CreateMachineDTO
-{
-    public required string Name { get; set;} 
-    public required string Location { get; set; } 
-    public Status? Status { get; set; }
-}
-class Machine
-{
-    public int ID { get; init; }  
-    public required string Name { get; set;} 
-    public required string Location { get; set; } 
-    public Status Status { get; set; }
-}
-
