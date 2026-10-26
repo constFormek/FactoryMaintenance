@@ -1,6 +1,6 @@
 @FactoryMaintenance_HostAddress = http://localhost:5259
 
-GET {{FactoryMaintenance_HostAddress}}/machines
+GET {{FactoryMaintenance_HostAddress}}/machines/1
 Accept: application/json
 
 ###
@@ -27,7 +27,11 @@ Content-Type: application/json
 
 ###
 
-PATCH {{FactoryMaintenance_HostAddress}}/machines/2/status
+POST {{FactoryMaintenance_HostAddress}}/machines/1/diagnostic
+
+###
+
+PATCH {{FactoryMaintenance_HostAddress}}/machines/1/status
 Content-Type: application/json
 
 {
@@ -39,6 +43,7 @@ Content-Type: application/json
 GET {{FactoryMaintenance_HostAddress}}/machines?status=Running
 Accept: application/json
 
+###
 
 GET {{FactoryMaintenance_HostAddress}}/machines/2
 Accept: application/json
