@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\plexi\\dev\\learning\\factory-maintenance\\FactoryMaintenance.csproj": {}
+    "C:\\Users\\Surface\\Desktop\\oskar programowanie\\FactoryMaintenance\\FactoryMaintenance.csproj": {}
   },
   "projects": {
-    "C:\\Users\\plexi\\dev\\learning\\factory-maintenance\\FactoryMaintenance.csproj": {
+    "C:\\Users\\Surface\\Desktop\\oskar programowanie\\FactoryMaintenance\\FactoryMaintenance.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\plexi\\dev\\learning\\factory-maintenance\\FactoryMaintenance.csproj",
+        "projectUniqueName": "C:\\Users\\Surface\\Desktop\\oskar programowanie\\FactoryMaintenance\\FactoryMaintenance.csproj",
         "projectName": "FactoryMaintenance",
-        "projectPath": "C:\\Users\\plexi\\dev\\learning\\factory-maintenance\\FactoryMaintenance.csproj",
-        "packagesPath": "C:\\Users\\plexi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\plexi\\dev\\learning\\factory-maintenance\\obj\\",
+        "projectPath": "C:\\Users\\Surface\\Desktop\\oskar programowanie\\FactoryMaintenance\\FactoryMaintenance.csproj",
+        "packagesPath": "C:\\Users\\Surface\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Surface\\Desktop\\oskar programowanie\\FactoryMaintenance\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\plexi\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Surface\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

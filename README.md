@@ -11,8 +11,10 @@ A REST API for managing factory machines and tracking their maintenance status.
 - to start the project run `dotnet run`
 - the requests can be sent in `FactoryMaintenance.http`
 
-## An important note
-data is stored in memory and resets on every restart.
+## Notes
+- Data is stored in memory and resets on every restart.
+- IDs are assigned sequentially and never reused.
+- Access to the machines list is synchronised with lock, so concurrent requests are safe.
 
 ## What I learned
 I learned how to structure endpoints as well as handle input validation, use DTOs and return HTTP status codes.
@@ -25,24 +27,28 @@ I learned how to structure endpoints as well as handle input validation, use DTO
 - Docker
 
 ## Endpoints
-- GET - `/machines` - lists every machine
-- GET - `/machines/{id}` - returns the machine with the given id
-- GET - `/machines?status=STATUS` - filters machines by status
-- POST - `/machines` - creates a new machine
-- PATCH - `/machines/{id}/status` - changes the status of the given machine
+| Method | Route                    | Description                         |
+| ------ | ------------------------ | ----------------------------------- |
+| GET    | `/machines`              | lists every machine                 |
+| GET    | `/machines/{id}`         | gives back machine of the given id  |
+| GET    | `/machines?status=STATUS`| filters machines by status          |
+| POST   | `/machines`              | creates a new machine               |
+| PATCH  | `/machines/{id}/status`  | changes the status of the machine   |
+| DELETE | `/machines/{id}`         | deletes a machine of the given id   |
 
-## Different endpoints return different Results<> instances
-
-1. POST - returns either
-- `Created<Machine>` with status 201, creating a new machine,
-- `BadRequest<string>` with status 400 and corresponding error message for a missing status or empty name or location
-
-2. PATCH - returns one of three
-- `NoContent` with status 204, accepting the change
-- `BadRequest<string>` with status 400, missing status
-- `NotFound` with status 404, unknown id
-
-3. GET with `{id}` - either returning 200 with `Ok<Machine>` or `NotFound` with status code of 404.
+## Responses
+| Endpoint | Status | Result Type | When |
+| -------- | ------ | ----------- | ---- |
+| GET `/machines` | 200 | 'Ok<Machine[]> | Always (empty array if nothing matches)
+| GET `/machines/{id}` | 200 | 'Ok<Machine> | Machine Found |
+| | 404 | 'NotFound' | No machine with that id |
+| POST `/machines` | 201 | 'Created<Machine>' | Machine created |
+| | 400 | 'BadRequest<string>' | Missing status, name or location |
+| PATCH `/machines/{id}` | 204 | 'NoContent' | Status changed |
+| | 400 | 'BadRequest<string>' | Missing status |
+| | 404 | 'NotFound' | No machine with that id |
+| DELETE `/machines/{id}` | 204 | 'NoContent' | Machine deleted |
+| | 404 | 'NotFound' | No machine with that id |
 
 ## Example request
 - Request
