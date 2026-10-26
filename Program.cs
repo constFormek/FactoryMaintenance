@@ -1,11 +1,9 @@
 
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -108,5 +106,52 @@ app.MapDelete("/machines/{id}", Results<NoContent, NotFound>(int id) =>
    return deletedCount == 0 ? TypedResults.NotFound() : TypedResults.NoContent(); 
 });
 
+app.MapPost("/machines/{id}/diagnostic", async Task<Results<Ok<DiagnosticDTO>, NotFound<string>, Conflict<string>>>(int id) =>
+{
+    var stopwatch = Stopwatch.StartNew();
+    Machine? machine;
+
+    lock (machinesLock)
+    {
+        machine = machines.FirstOrDefault(m => m.ID == id);
+    }
+
+    if (machine == null) return TypedResults.NotFound("Machine not found");
+
+    if (machine.Status == Status.Maintenance || machine.Status == Status.Stopped)
+    {
+        return TypedResults.Conflict($"Machine {machine.ID} has status {machine.Status.ToString().ToLower()} and can't be diagnosed.");
+    } 
+
+    await Task.Delay(3000);
+
+    lock (machinesLock)
+    {
+        machine = machines.FirstOrDefault(m => m.ID == id);
+    }
+
+    if (machine == null) return TypedResults.NotFound("Machine was deleted during the diagnostic");
+
+    if (machine.Status == Status.Maintenance || machine.Status == Status.Stopped)
+    {
+        return TypedResults.Conflict($"Machine {machine.ID} changed status to {machine.Status.ToString().ToLower()} and can't be diagnosed.");
+    }  
+
+    int randomInt = Random.Shared.Next(2);
+    bool passed = randomInt == 1;
+    string[] issues = passed ? [] : ["Spindle temperature above limit", "Unusual vibration detected"];
+    long msElapsed = stopwatch.ElapsedMilliseconds;
+    DiagnosticDTO response = new()
+    {
+        Id = machine.ID,
+        Passed = passed,
+        DurationMs = msElapsed,
+        Issues = issues
+    };
+
+    return TypedResults.Ok(response);
+});
+
 app.Run();
+
 
