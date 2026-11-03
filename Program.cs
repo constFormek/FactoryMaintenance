@@ -10,26 +10,33 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
 app.UseHttpsRedirection();
 
-Machine a = new Machine { ID = 1, Name = "CNC-01", Location = "Hall A", Status = Status.Running };
-Machine b = new Machine { ID = 2, Name = "CNC-02", Location = "Hall B", Status = Status.Stopped };
+
+Machine a = new() { ID = 1, Name = "CNC-01", Location = "Hall A", Status = Status.Running };
+Machine b = new() { ID = 2, Name = "CNC-02", Location = "Hall B", Status = Status.Stopped };
 
 List<Machine> machines = [a,b];
-int lastId = 0;
+int lastId = 2;
 var machinesLock = new object();
+
+Machine? FindMachineById(int id)
+{
+    Machine? queriedMachine;
+    lock (machinesLock)
+    {
+        queriedMachine = machines.FirstOrDefault(m => m.ID == id);
+    }
+
+    return queriedMachine;
+}
+
+bool CanBeDiagnosed(Status status)
+{
+    return status == Status.Running;
+}
 
 app.MapGet("/machines", Ok<Machine[]>(Status? status) =>
 {   
@@ -44,18 +51,14 @@ app.MapGet("/machines", Ok<Machine[]>(Status? status) =>
 
 app.MapGet("/machines/{id}", Results<Ok<Machine>, NotFound> (int id) =>
 {   
-    Machine? machineForLookup;
-    lock (machinesLock)
-    {
-        machineForLookup = machines.FirstOrDefault(m => m.ID == id);
-    }
+    Machine? queriedMachine = FindMachineById(id);
 
-    if (machineForLookup == null)
+    if (queriedMachine == null)
     {
         return TypedResults.NotFound();
     } 
     
-    return TypedResults.Ok(machineForLookup);
+    return TypedResults.Ok(queriedMachine);
     
 }).WithName("GetMachineByID");
 
@@ -79,15 +82,15 @@ app.MapPatch("/machines/{id}/status", Results<NoContent, NotFound,  BadRequest<s
 {   
     if (body.Status == null) return TypedResults.BadRequest("Status cannot be null");
 
-    Machine? machineForLookup;
+    Machine? queriedMachine;
 
     lock (machinesLock)
-    {
-        machineForLookup = machines.FirstOrDefault(m => m.ID == id);
-        machineForLookup?.Status = body.Status.Value; 
+    {   
+        queriedMachine = machines.FirstOrDefault(m => m.ID == id);
+        queriedMachine?.Status = body.Status.Value; 
     }
 
-    if (machineForLookup == null)
+    if (queriedMachine == null)
     {
         return TypedResults.NotFound();
     } 
@@ -109,32 +112,25 @@ app.MapDelete("/machines/{id}", Results<NoContent, NotFound>(int id) =>
 app.MapPost("/machines/{id}/diagnostic", async Task<Results<Ok<DiagnosticDTO>, NotFound<string>, Conflict<string>>>(int id) =>
 {
     var stopwatch = Stopwatch.StartNew();
-    Machine? machine;
+    
+    Machine? queriedMachine = FindMachineById(id);
 
-    lock (machinesLock)
+    if (queriedMachine == null) return TypedResults.NotFound("Machine not found");
+
+    if (!CanBeDiagnosed(queriedMachine.Status))
     {
-        machine = machines.FirstOrDefault(m => m.ID == id);
-    }
-
-    if (machine == null) return TypedResults.NotFound("Machine not found");
-
-    if (machine.Status == Status.Maintenance || machine.Status == Status.Stopped)
-    {
-        return TypedResults.Conflict($"Machine {machine.ID} has status {machine.Status.ToString().ToLower()} and can't be diagnosed.");
+        return TypedResults.Conflict($"Machine {queriedMachine} has status {queriedMachine.Status.ToString().ToLower()} and can't be diagnosed.");
     } 
 
     await Task.Delay(3000);
 
-    lock (machinesLock)
-    {
-        machine = machines.FirstOrDefault(m => m.ID == id);
-    }
+    queriedMachine = FindMachineById(id);
 
-    if (machine == null) return TypedResults.NotFound("Machine was deleted during the diagnostic");
+    if (queriedMachine == null) return TypedResults.NotFound("Machine was deleted during the diagnostic");
 
-    if (machine.Status == Status.Maintenance || machine.Status == Status.Stopped)
+    if (!CanBeDiagnosed(queriedMachine.Status))
     {
-        return TypedResults.Conflict($"Machine {machine.ID} changed status to {machine.Status.ToString().ToLower()} and can't be diagnosed.");
+        return TypedResults.Conflict($"Machine {queriedMachine.ID} changed status to {queriedMachine.Status.ToString().ToLower()} and can't be diagnosed.");
     }  
 
     int randomInt = Random.Shared.Next(2);
@@ -143,7 +139,7 @@ app.MapPost("/machines/{id}/diagnostic", async Task<Results<Ok<DiagnosticDTO>, N
     long msElapsed = stopwatch.ElapsedMilliseconds;
     DiagnosticDTO response = new()
     {
-        Id = machine.ID,
+        Id = queriedMachine.ID,
         Passed = passed,
         DurationMs = msElapsed,
         Issues = issues
